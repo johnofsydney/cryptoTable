@@ -1,0 +1,20 @@
+.row {
+  border-bottom: solid black 1px;
+}
+
+.row-striped:nth-of-type(even){
+  background-color: #efefef;
+}
+
+.row-striped:nth-of-type(odd){
+  background-color: #ffffff;
+}
+
+footer {
+  margin-top: 2em;
+}
+
+h1 {
+  background-color: #efefef;
+  border-bottom: solid black 1px;
+}

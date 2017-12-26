@@ -6,6 +6,7 @@ const banList = ["FLAP", "JPC", "CRB", "MC", "ERB", "EBZ", "MTLM3", "SNS", "DRS"
 const currencies = []
 const data = []
 let BTCUSD = 0
+let checkList = []
 
 const compare = function (a, b) {
   // Use toUpperCase() to ignore character casing
@@ -85,13 +86,11 @@ const fetchData = function (num1, num2) {
   const baseURL = "https://min-api.cryptocompare.com/data"
   const secondPath = "/pricemultifull?fsyms=";
   let currencySymbolList = []
-  // _(currencies).each(function(c) {
-  //   currencySymbolList.push(c.Symbol)
-  // })
+;
+
   for (var i = (num1); i < (num2); i++) {
     currencySymbolList.push(currencies[i].Symbol)
   }
-
 
   const compareSymbol = "&tsyms=USD"
   $.getJSON(baseURL + secondPath + currencySymbolList.join(",") + compareSymbol).done(function (info) {
@@ -112,15 +111,19 @@ const fetchData = function (num1, num2) {
         console.log("dont add smallest fish");
       } else if (c_obj.price < 0.1) {
         console.log("more small fish not added");
-      } else {
+      } else if ( checkList.indexOf(c_obj.symbol) === -1) {
+        checkList.push(c_obj.symbol)
         data.push(c_obj)
         data.sort(compare);
+      } else {
+        // do nothing
       }
 
 
     });
+    // wait a second to get all (most) of the data to process at once...
+    setTimeout(displayData(data), 1000);
 
-    displayData(data)
   }).fail(function () {
     alert('Something bad happened');
   });
@@ -146,7 +149,7 @@ const displayData = function(data) {
 
   _(data).each(function (c_obj) {
     row = [
-      `<div class="row">`,
+      `<div class="row row-striped">`,
       `<div class="col-2">${c_obj.symbol}</div>`,
       `<div class="col-2">${accounting.formatMoney(c_obj.price)}</div>`,
       `<div class="col-2">${c_obj.change24hour.toPrecision(3)}%</div>`,
